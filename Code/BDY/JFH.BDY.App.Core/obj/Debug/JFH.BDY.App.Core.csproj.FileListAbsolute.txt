@@ -1,4 +1,0 @@
-E:\JHF\BDY\JHF.Sal.Report\Bin\JFH.BDY.App.Core.dll
-E:\JHF\BDY\JHF.Sal.Report\Bin\JFH.BDY.App.Core.pdb
-E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.App.Core\obj\Debug\JFH.BDY.App.Core.dll
-E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.App.Core\obj\Debug\JFH.BDY.App.Core.pdb
