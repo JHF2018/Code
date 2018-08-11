@@ -1,0 +1,5 @@
+E:\JHF\BDY\JHF.Sal.Report\Bin\JHF.BDY.App.ServicePlugIn.dll
+E:\JHF\BDY\JHF.Sal.Report\Bin\JHF.BDY.App.ServicePlugIn.pdb
+E:\JHF\BDY\JHF.Sal.Report\JHF.BDY.App.ServicePlugIn\obj\Debug\JHF.BDY.App.ServicePlugIn.dll
+E:\JHF\BDY\JHF.Sal.Report\JHF.BDY.App.ServicePlugIn\obj\Debug\JHF.BDY.App.ServicePlugIn.pdb
+E:\JHF\BDY\JHF.Sal.Report\JHF.BDY.App.ServicePlugIn\obj\Debug\JHF.BDY.App.ServicePlugIn.csprojResolveAssemblyReference.cache

@@ -1,0 +1,5 @@
+E:\JHF\BDY\JHF.Sal.Report\Bin\JFH.BDY.ServiceHelper.dll
+E:\JHF\BDY\JHF.Sal.Report\Bin\JFH.BDY.ServiceHelper.pdb
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.ServiceHelper\obj\Debug\JFH.BDY.ServiceHelper.dll
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.ServiceHelper\obj\Debug\JFH.BDY.ServiceHelper.pdb
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.ServiceHelper\obj\Debug\JFH.BDY.ServiceHelper.csprojResolveAssemblyReference.cache

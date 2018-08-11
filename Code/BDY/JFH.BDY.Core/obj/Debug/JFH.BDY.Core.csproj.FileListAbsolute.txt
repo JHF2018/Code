@@ -1,0 +1,5 @@
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Core\bin\Debug\JFH.BDY.Core.dll
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Core\bin\Debug\JFH.BDY.Core.pdb
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Core\obj\Debug\JFH.BDY.Core.csprojResolveAssemblyReference.cache
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Core\obj\Debug\JFH.BDY.Core.dll
+E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Core\obj\Debug\JFH.BDY.Core.pdb
