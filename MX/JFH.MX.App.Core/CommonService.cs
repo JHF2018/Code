@@ -15,7 +15,7 @@ namespace JFH.MX.App.Core
     {
         /// <summary>
         /// 普通新增的生产订单，从工艺路线物料颜色对照表获取相应的工艺路线返回填充
-        /// 客户需求不需要物料判定，暂时注释掉3333
+        /// 客户需求不需要物料判定，暂时注释掉3999
         /// </summary>
         /// <param name="ctx"></param>
         ///<param name="orgId"></param>
