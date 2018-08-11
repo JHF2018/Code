@@ -37,6 +37,7 @@ namespace JFH.MX.App.Core
                 return Convert.ToInt64(data["F_JHF_ROUTID"]);
             }
 
+
             return 0;
 
 
