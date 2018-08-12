@@ -154,3 +154,11 @@ E:\JHF\销售报表\JHF.Sal.Report\JHF.Sal.App.Report\obj\Debug\JHF.Sal.App.Repo
 E:\JHF\BDY\JHF.Sal.Report\JHF.Sal.App.Report\obj\Debug\JHF.Sal.App.Report.csprojResolveAssemblyReference.cache
 E:\JHF\BDY\JHF.Sal.Report\JHF.Sal.App.Report\obj\Debug\JHF.Sal.App.Report.dll
 E:\JHF\BDY\JHF.Sal.Report\JHF.Sal.App.Report\obj\Debug\JHF.Sal.App.Report.pdb
+E:\JHF\Code\BDY\JHF.Sal.App.Report\obj\Debug\JHF.Sal.App.Report.dll
+E:\JHF\Code\BDY\JHF.Sal.App.Report\obj\Debug\JHF.Sal.App.Report.pdb
+E:\JHF\AppServer\JHF.Sal.App.Report.dll
+E:\JHF\AppServer\JHF.Sal.App.Report.pdb
+E:\JHF\Code\AppServer\JHF.Sal.App.Report.dll
+E:\JHF\Code\AppServer\JHF.Sal.App.Report.pdb
+E:\AppServer\JHF.Sal.App.Report.dll
+E:\AppServer\JHF.Sal.App.Report.pdb

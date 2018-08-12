@@ -68,3 +68,7 @@ E:\JHF\销售报表\JHF.Sal.Report\JHF.Sal.Report.Plugln\obj\Debug\JHF.Sal.Repor
 E:\JHF\BDY\JHF.Sal.Report\JHF.Sal.Report.Plugln\obj\Debug\JHF.Sal.Report.Plugln.csprojResolveAssemblyReference.cache
 E:\JHF\BDY\JHF.Sal.Report\JHF.Sal.Report.Plugln\obj\Debug\JHF.Sal.Report.Plugln.dll
 E:\JHF\BDY\JHF.Sal.Report\JHF.Sal.Report.Plugln\obj\Debug\JHF.Sal.Report.Plugln.pdb
+E:\JHF\Code\AppServer\JHF.Sal.Report.Plugln.dll
+E:\JHF\Code\AppServer\JHF.Sal.Report.Plugln.pdb
+E:\JHF\Code\BDY\JHF.Sal.Report.Plugln\obj\Debug\JHF.Sal.Report.Plugln.dll
+E:\JHF\Code\BDY\JHF.Sal.Report.Plugln\obj\Debug\JHF.Sal.Report.Plugln.pdb
