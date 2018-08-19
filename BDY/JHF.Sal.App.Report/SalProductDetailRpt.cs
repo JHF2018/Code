@@ -592,6 +592,11 @@ namespace JHF.Sal.App.Report
 
             stringBuilder.AppendLine(" ,FPURINSTOCKDATE,FPURINSTOCKQTY");
 
+            stringBuilder.AppendLine(" ,FOPENO,FOPEDATE,FOPEQTY");
+
+            stringBuilder.AppendLine(" ,FPLANNO,FPLANDATE,FPLANQTY");
+
+
 
             //stringBuilder.AppendLine("  ,FRETURNPRDID,FRETURNPRDBILLNO,FRETURNPQTY,FRETURNPPRICEUNITID,FRETURNPCHARGEQTY,FRETURNPAMOUNT");
             //stringBuilder.AppendLine("  ,FRETURNID,FRETURNBILLNO,FRETURNQTY,FRETURNPRICEUNITID,FRETURNCHARGEQTY,FRETURNAMOUNT");
@@ -654,8 +659,16 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ,STK.FDATE ");
             stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASEPURINSTOCKQTY*TSOE.FQty/T1.FBASECAlCQTY END) AS FPURINSTOCKQTY");
 
+            stringBuilder.AppendLine(" ,TOPE.FBILLNO,TOPE.FPLANSTARTTIME");
+            stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  TOPE.FBaseQty*TSOE.FQty/T1.FBASECAlCQTY END) AS FOPQTY");
 
-            
+            stringBuilder.AppendLine(" ,TPLN.FBILLNO,TPLN.FDEMANDDATE");
+            stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  TPLN.FBASEORDERQTY*TSOE.FQty/T1.FBASECAlCQTY END) AS FPLNQTY");
+
+
+
+
+
             stringBuilder.AppendLine(" ,TBUT.FPRECISION ");
             stringBuilder.AppendLine(" ,TBUT2.FPRECISION AS FCHARGEPRECISION");
             stringBuilder.AppendLine(" ,TBCU.FPRICEDIGITS");
@@ -694,7 +707,13 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ON T1.FPURINSTOCKID=STKE.FENTRYID");
             stringBuilder.AppendLine(" LEFT  JOIN T_STK_INSTOCK STK ");
             stringBuilder.AppendLine(" ON STKE.FID=STK.FID");
-    
+
+            stringBuilder.AppendLine(" LEFT JOIN T_SFC_OPERPLANNING TOPE on TOPE.FMOENTRYID=T1.FMOID");
+
+            stringBuilder.AppendLine(" LEFT JOIN T_PLN_PLANORDER_B TPLNB on TPLNB.FSaleOrderEntryId=T1.FORDERID");
+            //stringBuilder.AppendLine(" LEFT JOIN  T_PLN_PLANORDER TPLN ON TPLN.FID = TPLNB.FID ");
+            //stringBuilder.AppendLine(string.Format(" LEFT JOIN T_ENG_ROUTE_L TOUL on TOUL.FMOENTRYID=T1.FMOID and TOL.FLOCALEID={0} ", base.Context.UserLocale.LCID.ToString()));
+
             stringBuilder.AppendLine(" LEFT  JOIN T_SAL_OUTSTOCKENTRY TSOSE ");
             stringBuilder.AppendLine(" ON T1.FOUTID=TSOSE.FENTRYID AND T1.FOUTTYPE ='1'");
             stringBuilder.AppendLine(" LEFT  JOIN T_SAL_OUTSTOCK TSOS ");
