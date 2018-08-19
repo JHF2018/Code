@@ -212,6 +212,8 @@ namespace JHF.Sal.App.Report
 
             stringBuilder.AppendLine(" ,FMOID INT NULL");//生产订单entryID
             stringBuilder.AppendLine(" ,FBASEMOQTY DECIMAL(23,10) ");//生产订单分录数量
+            stringBuilder.AppendLine(" ,FPRDINSTOCKID INT NULL");//生产入单entryID
+            stringBuilder.AppendLine(" ,FBASEPRDINQTY DECIMAL(23,10) ");//生产入库分录数量
             stringBuilder.AppendLine(" ,FPURORDERID INT NULL");//采购订单分录ID
             stringBuilder.AppendLine(" ,FBASEPURORDERQTY DECIMAL(23,10) ");//采购订单分录数量
             stringBuilder.AppendLine(" ,FPURINSTOCKID INT NULL");//采购订单入库ID
@@ -243,11 +245,16 @@ namespace JHF.Sal.App.Report
         }
         public static void InsertFlowData(Context ctx, string flowTable, List<string> lstTable, string flowData, string filterSql, long[] entryIds, bool bIncludedUnfilledOrders)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            StringBuilder stringBuilder2 = new StringBuilder();
-            StringBuilder stringBuilder3 = new StringBuilder();
+
+            //innsert语句
+            StringBuilder insertSbSql = new StringBuilder();
+
+            //select 字段语句
+            StringBuilder selectSbSql = new StringBuilder();
+            //过滤 where语句拼接
+            StringBuilder whereSql = new StringBuilder();
             StringBuilder stringBuilder4 = new StringBuilder();
-            StringBuilder stringBuilder5 = new StringBuilder();
+            StringBuilder tableSpSql = new StringBuilder();
             List<string> list = new List<string>();
             string text = string.Empty;
             List<SqlObject> list2 = new List<SqlObject>();
@@ -255,7 +262,7 @@ namespace JHF.Sal.App.Report
             {
                 return;
             }
-            stringBuilder3.AppendLine("  AND ( 1=1");
+            whereSql.AppendLine("  AND ( 1=1");
             int num = 0;
             for (int i = 0; i < lstTable.Count; i++)
             {
@@ -271,118 +278,97 @@ namespace JHF.Sal.App.Report
                 switch (key = lstTable[j].ToUpperInvariant())
                 {
                     case "T_PRD_MOENTRY":
-                        stringBuilder.Append(" FMOID,FBASEMOQTY,");
-                        stringBuilder2.Append(string.Format(" T{0}.FENTRYID,CASE WHEN MO.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEMOQTY,", j, j));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
+                        insertSbSql.Append(" FMOID,FBASEMOQTY,");
+                        selectSbSql.Append(string.Format(" T{0}.FENTRYID,CASE WHEN MO.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEMOQTY,", j, j));
+                        whereSql.Append(string.Format(" AND {0}=0 ", lstTable[j]));
                         list.Add(lstTable[j]);
                         list.Add("T_PRD_MOENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
+                        tableSpSql.Append(string.Format(" {0},", lstTable[j]));
                         break;
                     case "T_PRD_INSTOCKENTRY":
-                        stringBuilder.Append(" FPRDINSTOCKID,FBASEPRDINQTY,");
-                        stringBuilder2.Append(string.Format(" T{0}.FENTRYID,CASE WHEN MO.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEPRDINQTY,", j, j));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
+                        insertSbSql.Append(" FPRDINSTOCKID,FBASEPRDINQTY,");
+                        selectSbSql.Append(string.Format(" T{0}.FENTRYID,CASE WHEN PRIN.FDOCUMENTSTATUS='C' THEN T{1}.FBASEREALQTY ELSE NULL END AS FBASEPRDINQTY,", j, j));
+                        whereSql.Append(string.Format(" AND {0}=0 ", lstTable[j]));
                         list.Add(lstTable[j]);
-                        list.Add("T_PRD_MOENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
+                        list.Add("T_PRD_INSTOCKENTRY_SID");
+                        tableSpSql.Append(string.Format(" {0},", lstTable[j]));
                         break;
 
                     case "T_PUR_POORDERENTRY":
-                        stringBuilder.Append(" FPURORDERID,FBASEPURORDERQTY,");
+                        insertSbSql.Append(" FPURORDERID,FBASEPURORDERQTY,");
 
-                        stringBuilder2.Append(string.Format(" T{0}.FENTRYID,CASE WHEN PUR.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEPURORDERQTY,", j, j));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
+                        selectSbSql.Append(string.Format(" T{0}.FENTRYID,CASE WHEN PUR.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEPURORDERQTY,", j, j));
+                        whereSql.Append(string.Format(" AND {0}=0 ", lstTable[j]));
                         list.Add(lstTable[j]);
                         list.Add("T_PUR_POORDERENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
+                        tableSpSql.Append(string.Format(" {0},", lstTable[j]));
                         break;
 
                     case "T_STK_INSTOCKENTRY":
-                        stringBuilder.Append(" FPURINSTOCKID,FBASEPURINSTOCKQTY,");
-                        stringBuilder2.Append(string.Format(" T{0}.FENTRYID,CASE WHEN STK.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEPURINSTOCKQTY,", j, j));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
+                        insertSbSql.Append(" FPURINSTOCKID,FBASEPURINSTOCKQTY,");
+                        selectSbSql.Append(string.Format(" T{0}.FENTRYID,CASE WHEN STK.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEPURINSTOCKQTY,", j, j));
+                        whereSql.Append(string.Format(" AND {0}=0 ", lstTable[j]));
                         list.Add(lstTable[j]);
                         list.Add("T_STK_INSTOCKENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
+                        tableSpSql.Append(string.Format(" {0},", lstTable[j]));
                         break;
-                    case "T_SAL_DELIVERYNOTICEENTRY":
-                        stringBuilder.Append(" FDENOID,FBASEDENOQTY,");
-                        stringBuilder2.Append(string.Format(" T{0}.FENTRYID,CASE WHEN DV.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY ELSE NULL END AS FBASEDENOQTY,", j, j));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
-                        list.Add(lstTable[j]);
-                        list.Add("T_SAL_DELIVERYNOTICEENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
-                        break;
-                    case "T_SAL_RETURNNOTICEENTRY":
-                        stringBuilder.Append(" FRETNOID,FBASERETQTY,");
-                        stringBuilder2.Append(string.Format(" T{0}.FENTRYID, CASE WHEN RV.FDOCUMENTSTATUS='C' THEN T{1}.FBASEUNITQTY  ELSE NULL END AS FBASERETQTY,", j, j));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
-                        list.Add(lstTable[j]);
-                        list.Add("T_SAL_RETURNNOTICEENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
-                        break;
+                
+               
                     case "T_SAL_ORDERENTRY":
-                        stringBuilder.Append(" FORDERID,FBASEORDERQTY,FBASECAlCQTY,");
-                        stringBuilder2.Append(" TOL.FENTRYID,TOL.FBASEUNITQTY FBASEORDERQTY,TOL.FBASEUNITQTY FBASECAlCQTY,");
+                        insertSbSql.Append(" FORDERID,FBASEORDERQTY,FBASECAlCQTY,");
+                        selectSbSql.Append(" TOL.FENTRYID,TOL.FBASEUNITQTY FBASEORDERQTY,TOL.FBASEUNITQTY FBASECAlCQTY,");
                         list.Add(lstTable[j]);
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
+                        tableSpSql.Append(string.Format(" {0},", lstTable[j]));
                         break;
                     case "T_SAL_OUTSTOCKENTRY":
-                        stringBuilder.Append(" FOUTID,FOUTTYPE,FBASEOUTQTY,");
-                        stringBuilder2.Append(string.Format("CASE WHEN OUT.FENTRYID IS NOT NULL  THEN T{0}.FENTRYID \r\n                                                                WHEN INITE.FENTRYID IS NOT NULL AND  INITOUT.FBILLTYPEID = '5518f5ceee8053' THEN T{2}.FENTRYID \r\n                                                            ELSE 0 END FOUTID, \r\n                                                            CASE WHEN OUT.FENTRYID IS NOT NULL THEN 1 \r\n                                                                WHEN INITE.FENTRYID IS NOT NULL AND  INITOUT.FBILLTYPEID = '5518f5ceee8053' THEN 2 \r\n                                                            ELSE 0 END FOUTTYPE, \r\n                                    CASE WHEN OUT.FENTRYID IS NOT NULL   AND OUTV.FDOCUMENTSTATUS='C' OR OUT.FSTOCKFLAG=1 THEN T{1}.FSALBASEQTY \r\n                                         WHEN INITOUT.FBILLTYPEID = '5518f5ceee8053' AND INITOUT.FDOCUMENTSTATUS='C' THEN T{2}.FSALBASEQTY  \r\n                                         ELSE NULL END AS FBASEOUTQTY,", j, j, num));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
+                        insertSbSql.Append(" FOUTID,FOUTTYPE,FBASEOUTQTY,");
+                        selectSbSql.Append(string.Format("CASE WHEN OUT.FENTRYID IS NOT NULL  THEN T{0}.FENTRYID \r\n                                                                WHEN INITE.FENTRYID IS NOT NULL AND  INITOUT.FBILLTYPEID = '5518f5ceee8053' THEN T{2}.FENTRYID \r\n                                                            ELSE 0 END FOUTID, \r\n                                                            CASE WHEN OUT.FENTRYID IS NOT NULL THEN 1 \r\n                                                                WHEN INITE.FENTRYID IS NOT NULL AND  INITOUT.FBILLTYPEID = '5518f5ceee8053' THEN 2 \r\n                                                            ELSE 0 END FOUTTYPE, \r\n                                    CASE WHEN OUT.FENTRYID IS NOT NULL   AND OUTV.FDOCUMENTSTATUS='C' OR OUT.FSTOCKFLAG=1 THEN T{1}.FSALBASEQTY \r\n                                         WHEN INITOUT.FBILLTYPEID = '5518f5ceee8053' AND INITOUT.FDOCUMENTSTATUS='C' THEN T{2}.FSALBASEQTY  \r\n                                         ELSE NULL END AS FBASEOUTQTY,", j, j, num));
+                        whereSql.Append(string.Format(" AND {0}=0 ", lstTable[j]));
                         list.Add(lstTable[j]);
                         list.Add("T_SAL_OUTSTOCKENTRY_SID");
                         text = string.Format(" T{0}.FENTRYID ASC ", j);
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
+                        tableSpSql.Append(string.Format(" {0},", lstTable[j]));
                         break;
-                    case "T_SAL_RETURNSTOCKENTRY":
-                        stringBuilder.Append(" FRETURNID,FRETURNTYPE,FBASERETURNQTY,");
-                        stringBuilder2.Append(string.Format("CASE WHEN RET.FENTRYID IS NOT NULL THEN T{0}.FENTRYID\r\n                                        WHEN INITOUT.FBILLTYPEID='5518f60aee8191' THEN T{2}.FENTRYID \r\n                                        ELSE 0 END FRETURNID, \r\n                                        CASE WHEN RET.FENTRYID IS NOT NULL THEN 1\r\n                                        WHEN INITOUT.FBILLTYPEID='5518f60aee8191' THEN 2\r\n                                        ELSE 0 END FRETURNTYPE, \r\n                                        CASE WHEN RET.FENTRYID IS NOT NULL AND  REV.FDOCUMENTSTATUS='C' OR RET.FSTOCKFLAG=1 THEN T{1}.FSALBASEQTY \r\n                                            WHEN INITE.FENTRYID IS NOT NULL AND INITOUT.FBILLTYPEID='5518f60aee8191' AND INITOUT.FDOCUMENTSTATUS='C' THEN T{2}.FSALBASEQTY\r\n                                            ELSE NULL  END FBASERETURNQTY,", j, j, num));
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
-                        list.Add(lstTable[j]);
-                        list.Add("T_SAL_RETURNSTOCKENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
-                        break;
-                    case "T_AR_RECEIVABLEENTRY":
-                        stringBuilder.Append(" FRECID,FOPENQTY,FBASERECQTY,FRECPRICEQTY,");
-                        stringBuilder2.Append(string.Format(" TAR.FENTRYID,CASE WHEN TARH.FDOCUMENTSTATUS='C' THEN  (CASE WHEN T{0}.FBASICUNITQTY=0 THEN TAR.FBUYIVBASICQTY ELSE TAR.FBUYIVBASICQTY*TARO.FSALBASEQTY/T{0}.FBASICUNITQTY END) ELSE NULL END AS FOPENQTY,", j));
-                        stringBuilder2.Append(string.Format(" CASE WHEN TARH.FDOCUMENTSTATUS='C' THEN TARO.FSALBASEQTY  ELSE NULL END AS FBASERECQTY, ", j));
-                        stringBuilder2.Append(string.Format(" CASE WHEN TARH.FDOCUMENTSTATUS='C' THEN TAR.FPRICEQTY  ELSE NULL END AS FRECPRICEQTY, ", j));
-                        stringBuilder3.Append(string.Format("  AND {0}=0 ", lstTable[j]));
-                        list.Add(lstTable[j]);
-                        list.Add("T_AR_RECEIVABLEENTRY_SID");
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
-                        break;
+                  
+              
                     case "T_SAL_INITOUTSTOCKENTRY":
-                        stringBuilder3.Append(string.Format(" AND {0}=0 ", lstTable[j]));
+                        whereSql.Append(string.Format(" AND {0}=0 ", lstTable[j]));
                         list.Add(lstTable[j]);
                         list.Add("T_SAL_INITOUTSTOCKENTRY_SID");
                         text = string.Format(" T{0}.FENTRYID ASC ", j);
-                        stringBuilder5.Append(string.Format(" {0},", lstTable[j]));
+                        tableSpSql.Append(string.Format(" {0},", lstTable[j]));
                         break;
                 }
             }
-            stringBuilder3.AppendLine(" )");
+            whereSql.AppendLine(" )");
+            #region 删除重复数据
+
             stringBuilder4.AppendLine(string.Format(" DELETE FROM {0} ", flowData));
             stringBuilder4.AppendLine(" WHERE 1 =1 ");
-            stringBuilder4.AppendLine(stringBuilder3.ToString());
+            stringBuilder4.AppendLine(whereSql.ToString());
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
+
+            #endregion
+            #region 插入无流程的数据
+
             stringBuilder4.AppendLine(string.Format("INSERT /*+append*/ INTO {0} ", flowData));
             stringBuilder4.AppendLine("( T_SAL_ORDERENTRY,T_SAL_ORDERENTRY_SID) ");
             stringBuilder4.AppendLine(filterSql);
             stringBuilder4.AppendLine(string.Format("  AND NOT EXISTS (select 1 from {0} T2 WHERE T2.T_SAL_ORDERENTRY=T1.FORDERID", flowData));
             stringBuilder4.AppendLine(" )");
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
+
+            #endregion
+
             stringBuilder4.Clear();
             stringBuilder4.AppendLine(string.Format(" INSERT /*+append*/ INTO {0}", flowTable));
             stringBuilder4.AppendLine(" (");
-            stringBuilder4.AppendLine(stringBuilder.ToString());
+            stringBuilder4.AppendLine(insertSbSql.ToString());
             stringBuilder4.AppendLine(" FSEQ ");
             stringBuilder4.AppendLine(" )");
             stringBuilder4.AppendLine(" SELECT ");
-            stringBuilder4.AppendLine(stringBuilder2.ToString());
+            stringBuilder4.AppendLine(selectSbSql.ToString());
             stringBuilder4.AppendLine(" ROW_NUMBER() OVER (ORDER BY TOL.FID ASC,TOL.FSEQ ASC  )");
             stringBuilder4.AppendLine(string.Format(" FROM (SELECT DISTINCT {0} FROM {1})  V ", string.Join(",", list.ToArray()), flowData));
             stringBuilder4.AppendLine(" LEFT JOIN T_SAL_ORDERENTRY TOL ON TOL.FENTRYID=V.T_SAL_ORDERENTRY");
@@ -391,7 +377,7 @@ namespace JHF.Sal.App.Report
                 string text2 = lstTable[k];
                 string text3 = lstTable[k] + "_LK";
                 string text4 = lstTable[k] + "_SID";
-                string a;
+               // string a;
 
                 #region 拼接
 
@@ -465,23 +451,7 @@ namespace JHF.Sal.App.Report
                         stringBuilder4.AppendLine(" LEFT JOIN T_PRD_INSTOCK PRIN ON PRIN.FID=PRI.FID ");
                         #endregion
                         break;
-                    case "T_STK_INSTOCKENTRY":
-                        #region T_STK_INSTOCKENTRY
-
-
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN {0} T{1} ON ( T{2}.FENTRYID=V.{3}  AND  T{4}.FSID=V.{5})", new object[]
-                        {
-                                    text3,
-                                    k,
-                                    k,
-                                    text2,
-                                    k,
-                                    text4
-                        }));
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN T_STK_INSTOCKENTRY STKE ON STKE.FENTRYID=V.{0} ", text2));
-                        stringBuilder4.AppendLine(" LEFT JOIN T_STK_INSTOCK  STK ON STK.FID=STKE.FID ");
-                        #endregion
-                        break;
+                
 
                     case "T_PUR_POORDERENTRY":
                         #region T_PUR_POORDERENTRY
@@ -500,27 +470,10 @@ namespace JHF.Sal.App.Report
                         stringBuilder4.AppendLine(" LEFT JOIN T_PUR_POORDER  PUR ON PUR.FID=PURE.FID ");
                         #endregion
                         break;
-                    case "T_AR_RECEIVABLEENTRY":
-                        #region T_AR_RECEIVABLEENTRY
 
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN {0} T{1} ON ( T{2}.FENTRYID=V.{3}  AND  T{4}.FSID=V.{5})", new object[]
-                        {
-                                            text3,
-                                            k,
-                                            k,
-                                            text2,
-                                            k,
-                                            text4
-                        }));
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN T_AR_RECEIVABLEENTRY TAR ON TAR.FENTRYID=V.{0}", text2));
-                        stringBuilder4.AppendLine(" LEFT JOIN T_AR_RECEIVABLEENTRY_O  TARO ON TARO.FENTRYID=TAR.FENTRYID ");
-                        stringBuilder4.AppendLine(" LEFT JOIN T_AR_RECEIVABLE  TARH ON TARH.FID=TAR.FID ");
 
-                        #endregion
-                        break;
-
-                    case "T_SAL_RETURNSTOCKENTRY":
-                        #region T_SAL_RETURNSTOCKENTRY
+                    case "T_STK_INSTOCKENTRY":
+                        #region T_STK_INSTOCKENTRY
 
 
                         stringBuilder4.AppendLine(string.Format(" LEFT JOIN {0} T{1} ON ( T{2}.FENTRYID=V.{3}  AND  T{4}.FSID=V.{5})", new object[]
@@ -532,49 +485,18 @@ namespace JHF.Sal.App.Report
                                     k,
                                     text4
                         }));
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN T_SAL_RETURNSTOCKENTRY RET ON RET.FENTRYID=V.{0} ", text2));
-                        stringBuilder4.AppendLine(" LEFT JOIN T_SAL_RETURNSTOCK  REV ON REV.FID=RET.FID ");
+                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN T_STK_INSTOCKENTRY STKE ON STKE.FENTRYID=V.{0} ", text2));
+                        stringBuilder4.AppendLine(" LEFT JOIN T_STK_INSTOCK  STK ON STK.FID=STKE.FID ");
                         #endregion
                         break;
 
-                    case "T_SAL_RETURNNOTICEENTRY":
-                        #region T_SAL_RETURNNOTICEENTRY
 
 
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN {0} T{1} ON ( T{2}.FENTRYID=V.{3}  AND  T{4}.FSID=V.{5})", new object[]
-                        {
-                                text3,
-                                k,
-                                k,
-                                text2,
-                                k,
-                                text4
-                        }));
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN T_SAL_RETURNNOTICEENTRY RENO ON RENO.FENTRYID=V.{0} ", text2));
-                        stringBuilder4.AppendLine(" LEFT JOIN T_SAL_RETURNNOTICE  RV ON RV.FID=RENO.FID ");
-                        #endregion
-                        break;
-                    case "T_SAL_DELIVERYNOTICEENTRY":
-                        #region T_SAL_DELIVERYNOTICEENTRY
-
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN {0} T{1} ON ( T{2}.FENTRYID=V.{3}  AND  T{4}.FSID=V.{5})", new object[]
-                        {
-                            text3,
-                            k,
-                            k,
-                            text2,
-                            k,
-                            text4
-                        }));
-                        stringBuilder4.AppendLine(string.Format(" LEFT JOIN T_SAL_DELIVERYNOTICEENTRY DU ON DU.FENTRYID=V.{0} ", text2));
-                        stringBuilder4.AppendLine(" LEFT JOIN T_SAL_DELIVERYNOTICE  DV ON DV.FID=DU.FID ");
-
-                        #endregion
-                        break;
 
                 }
 
                 #endregion
+
 
                 #region 拼接表sql
 
@@ -714,9 +636,9 @@ namespace JHF.Sal.App.Report
             }
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
-            stringBuilder.Clear();
-            stringBuilder3.Clear();
-            stringBuilder2.Clear();
+            insertSbSql.Clear();
+            whereSql.Clear();
+            selectSbSql.Clear();
             DBUtils.ExecuteBatchWithTime(ctx, list2, 300);
             list2.Clear();
             stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_1') CREATE INDEX idx_{0}_1 ON {1} (FRECID)", flowTable.Substring(3, 22), flowTable);

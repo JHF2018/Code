@@ -85,7 +85,7 @@ namespace JHF.Sal.App.Report
             base.Initialize();
             base.ReportProperty.IdentityFieldName = "FIDENTITYID";
             base.ReportProperty.ReportType = ReportType.REPORTTYPE_NORMAL;
-            base.ReportProperty.ReportName = new LocaleValue(ResManager.LoadKDString("销售生产明细表", "004102030003070", SubSystemType.SCM, new object[0]), base.Context.UserLocale.LCID);
+            base.ReportProperty.ReportName = new LocaleValue("销售生产明细表");
             base.ReportProperty.IsGroupSummary = true;
             base.ReportProperty.IsUIDesignerColumns = true;
             base.ReportProperty.PrimaryKeyFieldName = "FBILLNO";
@@ -161,6 +161,7 @@ namespace JHF.Sal.App.Report
             {
                 this.deleteTables.Add(current.TempTable);
             }
+            //从bf_instance表获取流程明细数据
             this.GetDataSource(this.rptFilterTable);
             //SalRptCommon.GetReceBillNo(base.Context, this.receivableTable, this.receBillnoTable);
             //SalRptCommon.GetInvoceBillNo(base.Context, this.invoceTable, this.invoceBillnoTable);
@@ -909,7 +910,7 @@ namespace JHF.Sal.App.Report
                 string text = this.ReadEntryTableName("SAL_SaleOrder", "FSaleOrderEntry");
                 buildBFTrackerTempTableArgs.FirstTableName = text;
                 buildBFTrackerTempTableArgs.TableNames.Add(text);
-                buildBFTrackerTempTableArgs.TableNames.Add(text);
+
                 // buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("SAL_DELIVERYNOTICE", "FEntity"));
                 buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("SAL_OUTSTOCK", "FEntity"));
                 // buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("STK_InStock", "FInStockEntry"));
@@ -924,7 +925,7 @@ namespace JHF.Sal.App.Report
                 buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("PRD_INSTOCK", "FEntity"));
                 buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("PUR_PurchaseOrder", "FPOOrderEntry"));
                 buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("STK_InStock", "FInStockEntry"));
-                buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("PRD_INSTOCK", "FEntity"));
+      
 
                 //  buildBFTrackerTempTableArgs.TableNames.Add(this.ReadEntryTableName("SFC_OperationPlanning", "FEntity"));
 
@@ -942,7 +943,7 @@ namespace JHF.Sal.App.Report
                         }
                     }
                     SalRptCommon.GetNeedDataByFields(base.Context, list, tempTableName, this.flowDataTable, entryIds);
-                    this.InsertFlowData(list, this.flowDataTable, tempTableName);
+                    //this.InsertFlowData(list, this.flowDataTable, tempTableName);
                     this.deleteTables.Add(this.flowDataTable);
                     SalRptCommon.InsertFlowData(base.Context, this.flowTable, list, this.flowDataTable, this.filterSql, entryIds, this.bIncludedUnfilledOrders);
                     //SalRptCommon.InsertReceivableData(base.Context, this.receivableHelpTable, this.receivableTable, this.flowTable);
@@ -1037,11 +1038,14 @@ namespace JHF.Sal.App.Report
             }
             List<SqlObject> list = new List<SqlObject>();
             this.rptFilterTable = SalRptCommon.AddTempTable(base.Context);
+            //高级过滤临时表
             SalRptCommon.CreateAdvanceTable(base.Context, this.rptFilterTable, list);
             this.deleteTables.Add(this.rptFilterTable);
             this.tmpRptTbl = SalRptCommon.AddTempTable(base.Context);
+            //最终临时表
             this.CreateTmpRptTable(this.tmpRptTbl, list);
             this.deleteTables.Add(this.tmpRptTbl);
+            //流程数据表
             this.flowTable = SalRptCommon.AddTempTable(base.Context);
             this.deleteTables.Add(this.flowTable);
             SalRptCommon.CreateFlowTable(base.Context, this.flowTable, list);
@@ -1286,11 +1290,11 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine("  ");
             list.Add(new SqlObject(stringBuilder.ToString(), new List<SqlParam>()));
             stringBuilder.Clear();
-            bool flag = !string.IsNullOrWhiteSpace(this.priceFrom) && this.priceFrom.Equals("RECEIVEBILL", StringComparison.CurrentCultureIgnoreCase);
-            if (flag)
-            {
-                list.Add(new SqlObject(this.GetMergeSQLForARSrc(tableName), new List<SqlParam>()));
-            }
+            //bool flag = !string.IsNullOrWhiteSpace(this.priceFrom) && this.priceFrom.Equals("RECEIVEBILL", StringComparison.CurrentCultureIgnoreCase);
+            //if (flag)
+            //{
+            //    list.Add(new SqlObject(this.GetMergeSQLForARSrc(tableName), new List<SqlParam>()));
+            //}
             stringBuilder.AppendLine(string.Format(" TRUNCATE TABLE {0} ", this.tmpRptTbl));
             list.Add(new SqlObject(stringBuilder.ToString(), new List<SqlParam>()));
             stringBuilder.Clear();
@@ -1607,20 +1611,20 @@ namespace JHF.Sal.App.Report
             }
             this.priceFrom = "SALORDERBILL";
             object obj;
-            if (num > 1 && filter.CustomParams.ContainsKey("ParentReportFilter"))
-            {
-                this.bMergingSOHeader = Convert.ToBoolean(((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["MergingSOHeader"]);
-                this.bIncludedUnfilledOrders = Convert.ToBoolean(((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["IncludedUnfilledOrders"]);
-                this.isRecWithMat = Convert.ToBoolean(((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["IsRecWithMat"]);
-                obj = ((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["PriceFrom"];
-            }
-            else
-            {
+            //if (num > 1 && filter.CustomParams.ContainsKey("ParentReportFilter"))
+            //{
+            //    this.bMergingSOHeader = Convert.ToBoolean(((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["MergingSOHeader"]);
+            //    this.bIncludedUnfilledOrders = Convert.ToBoolean(((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["IncludedUnfilledOrders"]);
+            //    this.isRecWithMat = Convert.ToBoolean(((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["IsRecWithMat"]);
+            //    obj = ((FilterParameter)filter.CustomParams["ParentReportFilter"]).CustomFilter["PriceFrom"];
+            //}
+            //else
+            //{
                 this.bMergingSOHeader = Convert.ToBoolean(this.GetDataByKey(customFilter, "MergingSOHeader"));
                 this.bIncludedUnfilledOrders = Convert.ToBoolean(this.GetDataByKey(customFilter, "IncludedUnfilledOrders"));
-                this.isRecWithMat = Convert.ToBoolean(this.GetDataByKey(customFilter, "IsRecWithMat"));
+                this.isRecWithMat = false;// Convert.ToBoolean(this.GetDataByKey(customFilter, "IsRecWithMat"));
                 obj = customFilter["PriceFrom"];
-            }
+            //}
             this.priceFrom = ((obj == null) ? this.priceFrom : Convert.ToString(obj));
             if (string.IsNullOrWhiteSpace(this.priceFrom))
             {
@@ -1700,19 +1704,19 @@ namespace JHF.Sal.App.Report
             }
             this.hidenColumns.Add("FLOCALCURRID", SqlStorageType.SqlBigInt);
             this.hidenColumns.Add("FPRICE_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FCHARGE_LC", SqlStorageType.SqlDecimal);
+           //// this.hidenColumns.Add("FCHARGE_LC", SqlStorageType.SqlDecimal);
             this.hidenColumns.Add("FBASEPRICE_LC", SqlStorageType.SqlDecimal);
             this.hidenColumns.Add("FORDERAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FDELIAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FDELIAMOUNT_LC", SqlStorageType.SqlDecimal);
             this.hidenColumns.Add("FOUTAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FRETURNPAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FRETURNAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FRECAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FWRITEOFFAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FINVOECEAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FADVANCEAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FRECEIPTAMOUNT_LC", SqlStorageType.SqlDecimal);
-            this.hidenColumns.Add("FCHARGEOFFAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FRETURNPAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FRETURNAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FRECAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FWRITEOFFAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FINVOECEAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FADVANCEAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FRECEIPTAMOUNT_LC", SqlStorageType.SqlDecimal);
+            //this.hidenColumns.Add("FCHARGEOFFAMOUNT_LC", SqlStorageType.SqlDecimal);
             List<ColumnField> list = new List<ColumnField>();
             foreach (ColumnField current in filter.FilterParameter.ColumnInfo)
             {
