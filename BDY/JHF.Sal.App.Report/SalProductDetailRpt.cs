@@ -586,6 +586,13 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine("  ,FUNITID ,FUNIT,FPRICEUNITID,FPRICEUNIT,FCURRENCYID,FMONEYTYPE,FPRICE,FCHARGE");
             stringBuilder.AppendLine(" ,FORDERQTY,FORDERCHARGEQTY,FORDERAMOUNT--,FDELIID,FDELIBILLNO,FDELIQTY,FDELIPRICEUNITID,FDELICHARGEQTY,FDELIAMOUNT");
             stringBuilder.AppendLine(" ,FOUTID,FOUTBILLNO,FOUTQTY,FOUTPRICEUNITID,FOUTCHARGEQTY,FOUTAMOUNT");
+
+            stringBuilder.AppendLine(" ,FMOBILLNO,FMODATE,FMOQTY,FMOINSTOCKDATE");
+            stringBuilder.AppendLine(" ,FMOINSTOCKQTY,FPURORDERNO,FPURORDERDATE,FPURORDERQTY");
+
+            stringBuilder.AppendLine(" ,FPURINSTOCKDATE,FPURINSTOCKQTY");
+
+
             //stringBuilder.AppendLine("  ,FRETURNPRDID,FRETURNPRDBILLNO,FRETURNPQTY,FRETURNPPRICEUNITID,FRETURNPCHARGEQTY,FRETURNPAMOUNT");
             //stringBuilder.AppendLine("  ,FRETURNID,FRETURNBILLNO,FRETURNQTY,FRETURNPRICEUNITID,FRETURNCHARGEQTY,FRETURNAMOUNT");
             //stringBuilder.AppendLine("  ,FRECEIVEBILLNO,FRECQTY,FRECEPRICEUNITID,FRECEIVECHARGEQTY,FRECAMOUNT,FWRITEOFFAMOUNT,FSETACCOUNTTYPE");
@@ -636,49 +643,19 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine("  ,TSOSEF.FPRICEUNITID AS FOUTPRICEUNITID");
             stringBuilder.AppendLine("  ,TSOSEF.FPRICEUNITQTY AS FOUTCHARGEQTY");
             stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASEOUTQTY*TSOF.FALLAMOUNT/T1.FBASECAlCQTY END) AS FOUTAMOUNT");
-            //stringBuilder.AppendLine(" ,CASE WHEN TSR.FDOCUMENTSTATUS='C' THEN TSRE.FENTRYID ELSE 0 END  AS FRETURNPRDID ");
-            //stringBuilder.AppendLine(" ,CASE WHEN TSR.FDOCUMENTSTATUS='C' THEN TSR.FBILLNO ELSE NULL END  AS FRETURNPRDBILLNO ");
-            //stringBuilder.AppendLine("  ,TSRE.FQTY AS FRETURNPQTY");
-            //stringBuilder.AppendLine("  ,TSREF.FPRICEUNITID AS FRETURNPPRICEUNITID");
-            //stringBuilder.AppendLine("  ,TSREF.FPRICEUNITQTY AS FRETURNPCHARGEQTY");
-            //stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASERETQTY*TSOF.FALLAMOUNT/T1.FBASECAlCQTY END) AS FRETURNAMOUNT ");
-            //stringBuilder.AppendLine(" ,CASE WHEN TSRSE.FENTRYID IS NOT NULL AND  (TSRS.FDOCUMENTSTATUS='C' OR TSRSE.FSTOCKFLAG=1) AND T1.FRETURNTYPE = 1 THEN TSRSE.FENTRYID \r\n                                      WHEN TINITOUTE.FENTRYID IS NOT NULL AND TINIT.FBILLTYPEID='5518f60aee8191' AND T1.FRETURNTYPE = 2 THEN TINITOUTE.FENTRYID\r\n                                       ELSE 0 END  FRETURNID ");
-            //stringBuilder.AppendLine(" ,CASE WHEN TSRSE.FENTRYID IS NOT NULL AND ( TSRS.FDOCUMENTSTATUS='C' OR TSRSE.FSTOCKFLAG=1) AND T1.FRETURNTYPE = 1 THEN TSRS.FBILLNO \r\n                                    WHEN TINITOUTE.FENTRYID IS NOT NULL AND TINIT.FBILLTYPEID='5518f60aee8191'  THEN TINIT.FBILLNO \r\n                                    ELSE NULL END AS FRETURNBILLNO ");
-            //stringBuilder.AppendLine(" ,TSRSEF.FSALUNITQTY AS FRETURNQTY");
-            //stringBuilder.AppendLine(" ,TSRSEF.FPRICEUNITID AS FRETURNPRICEUNITID");
-            //stringBuilder.AppendLine(" ,TSRSEF.FPRICEUNITQTY AS FRETURNCHARGEQTY");
-            //stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASERETURNQTY*TSOF.FALLAMOUNT/T1.FBASECAlCQTY END) AS FRETURNAMOUNT ");
-            //stringBuilder.AppendLine("  ,TAR.FBILLNO AS FRECEIVEBILLNO");
-            //stringBuilder.AppendLine(" ,TARO.FSALQTY AS FRECQTY");
-            //stringBuilder.AppendLine(" ,TARS.FPRICEUNITID AS FRECEPRICEUNITID");
-            //stringBuilder.AppendLine(" ,TARS.FPRICEQTY AS FRECEIVECHARGEQTY");
-            //stringBuilder.AppendLine(" ,( CASE WHEN ISNULL(T1.FBASERECQTY,0)=0  THEN NULL ELSE TARS.FALLAMOUNTFOR END) AS  FRECAMOUNT,ISNULL(TB1.FCUROPENAMOUNTFOR,0) AS FWRITEOFFAMOUNT");
-            //stringBuilder.AppendLine(string.Format(" ,CASE WHEN TAR.FSETACCOUNTTYPE='1' THEN N'{0}' WHEN TAR.FSETACCOUNTTYPE='2' THEN N'{1}' WHEN TAR.FSETACCOUNTTYPE='3' THEN N'{2}' ELSE N' ' END  AS FSETACCOUNTTYPE ", ResManager.LoadKDString("业务应收", "004102000033546", SubSystemType.SCM, new object[0]), ResManager.LoadKDString("暂估应收", "004102000033547", SubSystemType.SCM, new object[0]), ResManager.LoadKDString("财务应收", "004102000033545", SubSystemType.SCM, new object[0])));
-            //stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='1' THEN TINO.FINVOCEBILLNO ELSE TINOR.FINVOCEBILLNO_R END)  AS FSETACCOUNTTYPE ");
-            //stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='1' THEN (CASE WHEN ISNULL(TARO.FSALBASEQTY,0)=0 THEN 0 ELSE ISNULL(TARO.FSALQTY,0)*ISNULL(TARS.FOPENQTY,0)/TARO.FSALBASEQTY END) \r\n                                WHEN TAR.FSETACCOUNTTYPE='3' THEN (CASE WHEN ISNULL(TARS.FPRICEQTY,0)=0 THEN 0 ELSE ISNULL(TARO.FSALQTY,0)*ISNULL(TABLETIV.FPRICEQTY,0)/TARS.FPRICEQTY END) ELSE 0 END) AS FINVOECEQTY");
-            //stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='1' THEN (CASE WHEN ISNULL(T1.FOPENQTY,0)=0 THEN NULL ELSE T1.FRECPRICEQTY END)\r\n                                WHEN TAR.FSETACCOUNTTYPE='3' THEN TABLETIV.FPRICEQTY ELSE 0 END) AS FBILLCHARGEQTY ");
-            //stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='1' THEN (ISNULL(T1.FBASERECQTY,0)/(case ISNULL(TARO.FSALBASEQTY,1) when  0 then 1 else ISNULL(TARO.FSALBASEQTY,1) end)*TARS.FIVALLAMOUNTFOR)\r\n                                 WHEN TAR.FSETACCOUNTTYPE='3' THEN TABLETIV.FALLAMOUNTFOR ELSE 0 END) AS FINVOECEAMOUNT");
-            //if (this.isRecWithMat)
-            //{
-            //    stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='2' THEN 0 ELSE (TARS.FRECEIVEAMOUNT+(CASE WHEN ISNULL(TB1.FCUROPENAMOUNTFOR,0)>0 THEN 0 ELSE ISNULL(TB1.FCUROPENAMOUNTFOR,0) END)) END) AS FRECEIPTAMOUNT ");
-            //}
-            //else
-            //{
-            //    stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='2' THEN 0 ELSE ROUND(ISNULL(T1.FBASERECQTY,0)/(case ISNULL(TARO.FSALBASEQTY,1) when  0 then 1 else ISNULL(TARO.FSALBASEQTY,1) end)*(TA.FROWAMOUNTFOR/(case ISNULL(TA.FALLAMOUNTFOR,1) when  0 then 1 else ISNULL(TA.FALLAMOUNTFOR,1) end)*TA.FRECEIVEAMOUNT),TBCU.FAMOUNTDIGITS) END) AS FRECEIPTAMOUNT ");
-            //}
-            //stringBuilder.AppendLine(" ,NULL AS FNRECEIPTAMOUNT");
-            //stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='2' THEN 0 ELSE TA.FRECEIVEAMOUNT END) AS FRECEIVEAMOUNT");
-            //stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='2' THEN 0 ELSE ROUND(ISNULL(T1.FBASERECQTY,0)/(case ISNULL(TARO.FSALBASEQTY,1) when  0 then 1 else ISNULL(TARO.FSALBASEQTY,1) end)*(TA.FROWAMOUNTFOR/(case ISNULL(TA.FALLAMOUNTFOR,1) when  0 then 1 else ISNULL(TA.FALLAMOUNTFOR,1) end)*TA.FCHARGEOFFAMOUNT),6) END) AS FCHARGEOFFAMOUNT");
-            //stringBuilder.AppendLine(" ,TARS.FID");
-            //if (this.isRecWithMat)
-            //{
-            //    stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='2' THEN N' ' ELSE (CASE WHEN TARS.FRECEIVEAMOUNT <> 0 THEN TBNO.FRECBILLNO ELSE N' ' END) END) AS FRECBILLNO");
-            //}
-            //else
-            //{
-            //    stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='2' THEN N' ' ELSE TBNO.FRECBILLNO END) AS FRECBILLNO");
-            //}
-            //stringBuilder.AppendLine(" ,(CASE WHEN TAR.FSETACCOUNTTYPE='2' THEN N' ' ELSE TBNO.FCHARGEOFFBILLNO END) AS FCHARGEOFFBILLNO");
+
+            stringBuilder.AppendLine(" ,Mo.FBILLNO ,MO.FDATE ");
+            stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASEMOQTY*TSOE.FQty/T1.FBASECAlCQTY END) AS FMOQTY");
+            stringBuilder.AppendLine(" ,PRDIN.FDATE ");
+            stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASEPRDINQTY*TSOE.FQty/T1.FBASECAlCQTY END) AS FPRDINQTY");
+
+            stringBuilder.AppendLine(" ,PURO.FBILLNO ,PURO.FDATE ");
+            stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASEPURORDERQTY*TSOE.FQty/T1.FBASECAlCQTY END) AS FPURORDERQTY");
+            stringBuilder.AppendLine(" ,STK.FDATE ");
+            stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(T1.FBASECAlCQTY,0)=0  THEN NULL ELSE  T1.FBASEPURINSTOCKQTY*TSOE.FQty/T1.FBASECAlCQTY END) AS FPURINSTOCKQTY");
+
+
+            
             stringBuilder.AppendLine(" ,TBUT.FPRECISION ");
             stringBuilder.AppendLine(" ,TBUT2.FPRECISION AS FCHARGEPRECISION");
             stringBuilder.AppendLine(" ,TBCU.FPRICEDIGITS");
@@ -689,13 +666,7 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ,TSOE.FBASEUNITID,TBU3.FNAME AS FBASEUNITNAME");
             stringBuilder.AppendLine(" ,TSOE.FBASEUNITQTY");
             stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(TSOE.FBASEUNITQTY,0)=0 THEN 0  ELSE  ISNULL(TSOF.FAMOUNT,0)/TSOE.FBASEUNITQTY END) AS FBASEPRICE ");
-            //stringBuilder.AppendLine(" ,TSDE.FBASEUNITQTY");
-            //stringBuilder.AppendLine(" ,TSOSE.FBASEUNITQTY");
-            //stringBuilder.AppendLine(" ,TSRE.FBASEUNITQTY");
-            //stringBuilder.AppendLine(" ,TSRSE.FBASEUNITQTY");
-            //stringBuilder.AppendLine(" ,TARS.FBASICUNITQTY");
-            //stringBuilder.AppendLine(" ,TARS.FBUYIVBASICQTY");
-            //stringBuilder.AppendLine(" ,(CASE WHEN ISNULL(TBR.FRECMETHOD,0) <> 3 THEN 0 ELSE 1 END) AS FISRECMAT");
+
             stringBuilder.AppendLine("");
             stringBuilder.AppendLine(string.Format(" FROM {0} T1 ", this.flowTable));
             stringBuilder.AppendLine(" LEFT  JOIN T_SAL_ORDERENTRY  TSOE  ");
@@ -706,12 +677,24 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ON TSOE.FENTRYID=TSOF.FENTRYID ");
             stringBuilder.AppendLine(" INNER JOIN T_SAL_ORDERENTRY_D TSRD  ");
             stringBuilder.AppendLine(" ON T1.FORDERID=TSRD.FENTRYID ");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_DELIVERYNOTICEENTRY TSDE ");
-            stringBuilder.AppendLine(" ON T1.FDENOID=TSDE.FENTRYID");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_DELIVERYNOTICE TSD ");
-            stringBuilder.AppendLine(" ON TSDE.FID=TSD.FID");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_DELIVERYNOTICEENTRY_F TSDEF ");
-            stringBuilder.AppendLine(" ON TSDEF.FENTRYID=TSDE.FENTRYID");
+            stringBuilder.AppendLine(" LEFT  JOIN T_PRD_MOENTRY MOE ");
+            stringBuilder.AppendLine(" ON T1.FMOID=MOE.FENTRYID");
+            stringBuilder.AppendLine(" LEFT  JOIN T_PRD_MO MO ");
+            stringBuilder.AppendLine(" ON MOE.FID=MO.FID");
+            stringBuilder.AppendLine(" LEFT  JOIN T_PRD_INSTOCKENTRY PRDINE ");
+            stringBuilder.AppendLine(" ON T1.FPRDINSTOCKID=PRDINE.FENTRYID");
+            stringBuilder.AppendLine(" LEFT  JOIN T_PRD_INSTOCK PRDIN ");
+            stringBuilder.AppendLine(" ON PRDINE.FID=PRDIN.FID");
+
+            stringBuilder.AppendLine(" LEFT  JOIN T_PUR_POORDERENTRY PUROE ");
+            stringBuilder.AppendLine(" ON T1.FPURORDERID=PUROE.FENTRYID");
+            stringBuilder.AppendLine(" LEFT  JOIN T_PUR_POORDER PURO ");
+            stringBuilder.AppendLine(" ON PUROE.FID=PURO.FID");
+            stringBuilder.AppendLine(" LEFT  JOIN T_STK_INSTOCKENTRY STKE ");
+            stringBuilder.AppendLine(" ON T1.FPURINSTOCKID=STKE.FENTRYID");
+            stringBuilder.AppendLine(" LEFT  JOIN T_STK_INSTOCK STK ");
+            stringBuilder.AppendLine(" ON STKE.FID=STK.FID");
+    
             stringBuilder.AppendLine(" LEFT  JOIN T_SAL_OUTSTOCKENTRY TSOSE ");
             stringBuilder.AppendLine(" ON T1.FOUTID=TSOSE.FENTRYID AND T1.FOUTTYPE ='1'");
             stringBuilder.AppendLine(" LEFT  JOIN T_SAL_OUTSTOCK TSOS ");
@@ -719,21 +702,10 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" LEFT JOIN T_SAL_OUTSTOCKENTRY_F TSOSEF ");
             stringBuilder.AppendLine(" ON TSOSE.FENTRYID = TSOSEF.FENTRYID ");
             stringBuilder.AppendLine(" LEFT  JOIN T_SAL_INITOUTSTOCKENTRY TINITOUTE ");
-            stringBuilder.AppendLine(" ON ((T1.FOUTID=TINITOUTE.FENTRYID OR T1.FRETURNID=TINITOUTE.FENTRYID) AND TSO.FISINIT='1' AND T1.FOUTTYPE ='2')");
+            stringBuilder.AppendLine(" ON ((T1.FOUTID=TINITOUTE.FENTRYID ) AND TSO.FISINIT='1' AND T1.FOUTTYPE ='2')");
             stringBuilder.AppendLine(" LEFT  JOIN T_SAL_INITOUTSTOCK TINIT ");
             stringBuilder.AppendLine(" ON TINITOUTE.FID=TINIT.FID ");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_RETURNNOTICEENTRY TSRE  ");
-            stringBuilder.AppendLine(" ON T1.FRETNOID=TSRE.FENTRYID");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_RETURNNOTICE TSR  ");
-            stringBuilder.AppendLine(" ON TSRE.FID=TSR.FID");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_RETURNNOTICEENTRY_F TSREF  ");
-            stringBuilder.AppendLine(" ON TSREF.FENTRYID=TSRE.FENTRYID");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_RETURNSTOCKENTRY TSRSE ");
-            stringBuilder.AppendLine(" ON T1.FRETURNID=TSRSE.FENTRYID");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_RETURNSTOCKENTRY_F TSRSEF ");
-            stringBuilder.AppendLine(" ON TSRSEF.FENTRYID=TSRSE.FENTRYID");
-            stringBuilder.AppendLine(" LEFT  JOIN T_SAL_RETURNSTOCK TSRS ");
-            stringBuilder.AppendLine(" ON TSRSE.FID=TSRS.FID ");
+
             stringBuilder.AppendLine(" LEFT  JOIN T_BD_DEPARTMENT_L TBD ");
             stringBuilder.AppendLine(string.Format(" ON TSO.FSALEDEPTID=TBD.FDEPTID AND TBD.FLOCALEID={0} ", base.Context.UserLocale.LCID.ToString()));
             stringBuilder.AppendLine(" LEFT  JOIN T_BD_DEPARTMENT TBDE ");
@@ -779,29 +751,7 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ON TSOE.FUNITID=TBUT.FUNITID");
             stringBuilder.AppendLine(" LEFT  JOIN T_BD_UNIT TBUT2 ");
             stringBuilder.AppendLine(" ON TSOF.FPRICEUNITID = TBUT2.FUNITID");
-            //stringBuilder.AppendLine(" LEFT JOIN ");
-            //stringBuilder.AppendLine(" T_AR_RECEIVABLEENTRY TARS ON TARS.FENTRYID=T1.FRECID ");
-            //stringBuilder.AppendLine(" LEFT JOIN T_AR_RECEIVABLEENTRY_O  TARO ON TARO.FENTRYID=TARS.FENTRYID ");
-            //stringBuilder.AppendLine("  LEFT JOIN  (SELECT FTARGETENTRYID, SUM(FCUROPENAMOUNTFOR) AS FCUROPENAMOUNTFOR FROM T_AR_BillingMatchLogENTRY  \r\n                                    WHERE FTARGETFROMID='AR_receivable' AND FISADIBILL='1' GROUP BY FTARGETENTRYID) TB1 on TB1.FTARGETENTRYID=TARS.FENTRYID ");
-            //stringBuilder.AppendLine(" LEFT JOIN T_AR_RECEIVABLE TAR ON TAR.FID=TARS.FID AND TAR.FDOCUMENTSTATUS='C' ");
-            //stringBuilder.AppendLine(" LEFT JOIN ");
-            //stringBuilder.AppendLine(string.Format(" ( SELECT Distinct FID,FRECID,FALLAMOUNTFOR,FRECEIVEAMOUNT,FROWAMOUNTFOR,FCHARGEOFFAMOUNT FROM {0}) TA ", this.receivableTable));
-            //stringBuilder.AppendLine(" ON TA.FRECID=T1.FRECID");
-            //stringBuilder.AppendLine(" LEFT JOIN ");
-            //stringBuilder.AppendLine(string.Format(" {0} TBNO ", this.receBillnoTable));
-            //stringBuilder.AppendLine(" ON TBNO.FRECID=T1.FRECID");
-            //stringBuilder.AppendLine(" LEFT JOIN ");
-            //stringBuilder.AppendLine(string.Format(" {0} TINO ", this.invoceBillnoTable));
-            //stringBuilder.AppendLine(" ON TINO.FRECID=T1.FRECID");
-            //stringBuilder.AppendLine(" LEFT JOIN ");
-            //stringBuilder.AppendLine(string.Format(" {0} TINOR ", this.invoceBillno_RTable));
-            //stringBuilder.AppendLine(" ON TINOR.FSRCROWID=T1.FRECID");
-            //stringBuilder.AppendLine(" LEFT JOIN ");
-            //stringBuilder.AppendLine(" (select SUM(ISNULL(TIVS.FPRICEQTY,0)) AS FPRICEQTY,SUM(ISNULL(TIVS.FALLAMOUNTFOR,0)) AS FALLAMOUNTFOR,TIVS.FSRCROWID AS FSRCROWID ");
-            //stringBuilder.AppendLine(string.Format(" FROM  T_IV_SALESICENTRY TIVS INNER JOIN {0} TEMP1 ON TIVS.FSRCROWID=TEMP1.FRECID", this.flowTable));
-            //stringBuilder.AppendLine(" LEFT JOIN T_IV_SALESIC TIV ON TIV.FID=TIVS.FID AND TIV.FDOCUMENTSTATUS='C' ");
-            //stringBuilder.AppendLine(" GROUP BY TIVS.FSRCROWID ");
-            //stringBuilder.AppendLine(" ) TABLETIV ON TABLETIV.FSRCROWID=T1.FRECID ");
+  
             list.Add(new SqlObject(stringBuilder.ToString(), new List<SqlParam>()));
             stringBuilder.Clear();
             DBUtils.ExecuteBatchWithTime(base.Context, list, 180);
@@ -1151,6 +1101,22 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine("     FPURINSTOCKQTY  decimal(24,10)  null , ");
 
 
+
+            stringBuilder.AppendLine("     FOPEID int null, ");
+            stringBuilder.AppendLine("     FOPENO nvarchar(100) null, ");
+            stringBuilder.AppendLine("     FOPEDATE datetime  null, ");
+            stringBuilder.AppendLine("     FOPERROUTENAME  nvarchar(100)  null , ");
+            stringBuilder.AppendLine("     FOPEQTY  decimal(24,10)  null , ");
+            stringBuilder.AppendLine("     FENDOPEDATE  datetime  null , ");
+            stringBuilder.AppendLine("     FENDQTY   decimal(24,10)  null , ");
+
+
+
+            stringBuilder.AppendLine("     FPLANID int null, ");
+            stringBuilder.AppendLine("     FPLANNO nvarchar(100) null, ");
+            stringBuilder.AppendLine("     FPLANDATE datetime  null, ");
+            stringBuilder.AppendLine("     FPLANQTY  decimal(24,10)  null , ");
+
             //stringBuilder.AppendLine("     FRETURNPRDID int null, ");
             //stringBuilder.AppendLine("     FRETURNPRDBILLNO nvarchar(100) null, ");
             //stringBuilder.AppendLine("     FRETURNPQTY  decimal(24,10)  null , ");
@@ -1262,7 +1228,18 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ,FUNIT,FPRICEUNIT,FCURRENCYID,FMONEYTYPE,FPRICE,FCHARGE");
             stringBuilder.AppendLine(" ,FORDERQTY,FORDERCHARGEQTY,FORDERAMOUNT--,FDELIBILLNO,FDELIQTY,FDELICHARGEQTY,FDELIAMOUNT");
             stringBuilder.AppendLine(" ,FOUTBILLNO,FOUTQTY,FOUTCHARGEQTY,FOUTAMOUNT");
-           // stringBuilder.AppendLine(" ,FRETURNPRDBILLNO,FRETURNPQTY,FRETURNPCHARGEQTY,FRETURNPAMOUNT");
+
+
+            stringBuilder.AppendLine(" ,FMOBILLNO,FMODATE,FMOQTY,FMOINSTOCKDATE");
+            stringBuilder.AppendLine(" ,FMOINSTOCKQTY,FPURORDERNO,FPURORDERDATE,FPURORDERQTY");
+
+            stringBuilder.AppendLine(" ,FPURINSTOCKDATE,FPURINSTOCKQTY");
+
+
+            stringBuilder.AppendLine(" ,FOPENO,FOPEDATE,FOPERROUTENAME,FOPEQTY,FENDOPEDATE,FENDQTY");
+            stringBuilder.AppendLine(" ,FPLANNO,FPLANDATE,FPLANQTY");
+            
+            // stringBuilder.AppendLine(" ,FRETURNPRDBILLNO,FRETURNPQTY,FRETURNPCHARGEQTY,FRETURNPAMOUNT");
             //stringBuilder.AppendLine(" ,FRETURNBILLNO,FRETURNQTY,FRETURNCHARGEQTY,FRETURNAMOUNT");
             //stringBuilder.AppendLine(" ,FRECEIVEBILLNO,FRECQTY,FRECEIVECHARGEQTY,FRECAMOUNT,FWRITEOFFAMOUNT,FSETACCOUNTTYPE");
             //stringBuilder.AppendLine(" ,FINVOECEBILLNO,FINVOECEQTY,FBILLCHARGEQTY,FINVOECEAMOUNT");

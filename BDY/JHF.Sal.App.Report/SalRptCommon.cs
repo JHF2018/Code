@@ -204,8 +204,8 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ,FORDERID INT NULL");
             stringBuilder.AppendLine(" ,FBASEORDERQTY DECIMAL(23,10) ");
             stringBuilder.AppendLine(" ,FBASECAlCQTY DECIMAL(23,10) ");
-            stringBuilder.AppendLine(" ,FDENOID INT NULL");
-            stringBuilder.AppendLine(" ,FBASEDENOQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FDENOID INT NULL");
+            //stringBuilder.AppendLine(" ,FBASEDENOQTY DECIMAL(23,10) ");
             stringBuilder.AppendLine(" ,FOUTID INT NULL");
             stringBuilder.AppendLine(" ,FOUTTYPE INT NULL");
             stringBuilder.AppendLine(" ,FBASEOUTQTY DECIMAL(23,10) ");
@@ -224,21 +224,21 @@ namespace JHF.Sal.App.Report
             stringBuilder.AppendLine(" ,FBASEOPEQTY DECIMAL(23,10) ");//工序数量
 
 
-            stringBuilder.AppendLine(" ,FRETNOID INT NULL");
-            stringBuilder.AppendLine(" ,FBASERETQTY DECIMAL(23,10) ");
-            stringBuilder.AppendLine(" ,FRETURNSID INT NULL");
-            stringBuilder.AppendLine(" ,FRETURNID INT NULL");
-            stringBuilder.AppendLine(" ,FRETURNTYPE INT NULL");
-            stringBuilder.AppendLine(" ,FBASERETURNQTY DECIMAL(23,10) ");
-            stringBuilder.AppendLine(" ,FSOCID INT NULL");
-            stringBuilder.AppendLine(" ,FBASESOCQTY DECIMAL(23,10) ");
-            stringBuilder.AppendLine(" ,FSICID INT NULL");
-            stringBuilder.AppendLine(" ,FBASESICQTY DECIMAL(23,10) ");
-            stringBuilder.AppendLine(" ,FRECSID INT NULL");
-            stringBuilder.AppendLine(" ,FRECID INT NULL");
-            stringBuilder.AppendLine(" ,FOPENQTY DECIMAL(23,10) ");
-            stringBuilder.AppendLine(" ,FBASERECQTY DECIMAL(23,10) ");
-            stringBuilder.AppendLine(" ,FRECPRICEQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FRETNOID INT NULL");
+            //stringBuilder.AppendLine(" ,FBASERETQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FRETURNSID INT NULL");
+            //stringBuilder.AppendLine(" ,FRETURNID INT NULL");
+            //stringBuilder.AppendLine(" ,FRETURNTYPE INT NULL");
+            //stringBuilder.AppendLine(" ,FBASERETURNQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FSOCID INT NULL");
+            //stringBuilder.AppendLine(" ,FBASESOCQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FSICID INT NULL");
+            //stringBuilder.AppendLine(" ,FBASESICQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FRECSID INT NULL");
+            //stringBuilder.AppendLine(" ,FRECID INT NULL");
+            //stringBuilder.AppendLine(" ,FOPENQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FBASERECQTY DECIMAL(23,10) ");
+            //stringBuilder.AppendLine(" ,FRECPRICEQTY DECIMAL(23,10) ");
             stringBuilder.AppendLine(" )");
             lstTable.Add(new SqlObject(stringBuilder.ToString(), new List<SqlParam>()));
             stringBuilder.Clear();
@@ -262,6 +262,7 @@ namespace JHF.Sal.App.Report
             {
                 return;
             }
+            #region 构建语句
             whereSql.AppendLine("  AND ( 1=1");
             int num = 0;
             for (int i = 0; i < lstTable.Count; i++)
@@ -272,6 +273,8 @@ namespace JHF.Sal.App.Report
                     break;
                 }
             }
+           
+
             for (int j = 0; j < lstTable.Count; j++)
             {
                 string key;
@@ -341,6 +344,8 @@ namespace JHF.Sal.App.Report
                 }
             }
             whereSql.AppendLine(" )");
+
+            #endregion
             #region 删除重复数据
 
             stringBuilder4.AppendLine(string.Format(" DELETE FROM {0} ", flowData));
@@ -641,69 +646,88 @@ namespace JHF.Sal.App.Report
             selectSbSql.Clear();
             DBUtils.ExecuteBatchWithTime(ctx, list2, 300);
             list2.Clear();
-            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_1') CREATE INDEX idx_{0}_1 ON {1} (FRECID)", flowTable.Substring(3, 22), flowTable);
-            list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
-            stringBuilder4.Clear();
+         
             stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_2') CREATE INDEX idx_{0}_2 ON {1} (FORDERID)", flowTable.Substring(3, 22), flowTable);
-            list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
-            stringBuilder4.Clear();
-            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_3') CREATE INDEX idx_{0}_3 ON {1} (FDENOID)", flowTable.Substring(3, 22), flowTable);
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
             stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_4') CREATE INDEX idx_{0}_4 ON {1} (FOUTID)", flowTable.Substring(3, 22), flowTable);
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
-            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_5') CREATE INDEX idx_{0}_5 ON {1} (FRETNOID)", flowTable.Substring(3, 22), flowTable);
+            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_5') CREATE INDEX idx_{0}_5 ON {1} (FPURORDERID)", flowTable.Substring(3, 22), flowTable);
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
-            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_6') CREATE INDEX idx_{0}_6 ON {1} (FRETURNID)", flowTable.Substring(3, 22), flowTable);
+            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_6') CREATE INDEX idx_{0}_6 ON {1} (FPURINSTOCKID)", flowTable.Substring(3, 22), flowTable);
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
 
             stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_7') CREATE INDEX idx_{0}_7 ON {1} (FMOID)", flowTable.Substring(3, 22), flowTable);
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
-            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_8') CREATE INDEX idx_{0}_8 ON {1} (FPURORDERID)", flowTable.Substring(3, 22), flowTable);
+            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_8') CREATE INDEX idx_{0}_8 ON {1} (FPRDINSTOCKID)", flowTable.Substring(3, 22), flowTable);
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
-            stringBuilder4.AppendFormat(" IF NOT EXISTS (SELECT 1 FROM KSQL_INDEXES WHERE KSQL_INDNAME = 'idx_{0}_9') CREATE INDEX idx_{0}_9 ON {1} (FPURINSTOCKID)", flowTable.Substring(3, 22), flowTable);
-            list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
-            stringBuilder4.Clear();
+      
             DBUtils.ExecuteBatch(ctx, list2);
             list2.Clear();
             if (!bIncludedUnfilledOrders)
             {
                 stringBuilder4.AppendLine(string.Format(" DELETE  {0}  ", flowTable));
                 stringBuilder4.AppendLine(" where ");
-                stringBuilder4.AppendLine(string.Format(" {0}.FBASEDENOQTY IS NULL AND {0}.FBASERETQTY IS NULL AND {0}.FBASEOUTQTY IS NULL  ", flowTable));
-                stringBuilder4.AppendLine(string.Format(" AND {0}.FBASERETURNQTY IS NULL    AND {0}.FBASERECQTY IS NULL ", flowTable));
+                stringBuilder4.AppendLine(string.Format(" {0}.FBASEMOQTY IS NULL AND {0}.FBASEPRDINQTY IS NULL AND {0}.FBASEOUTQTY IS NULL  ", flowTable));
+                stringBuilder4.AppendLine(string.Format(" AND {0}.FBASEPURORDERQTY IS NULL    AND {0}.FBASEPURINSTOCKQTY IS NULL  ", flowTable));
+                stringBuilder4.AppendLine(string.Format(" AND {0}.FBASEPLANQTY IS NULL    AND {0}.FBASEOPEQTY IS NULL  ", flowTable));
                 list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
                 stringBuilder4.Clear();
             }
-            if (ctx.DatabaseType == DatabaseType.MS_SQL_Server)
-            {
-                stringBuilder4.AppendLine(string.Format("/*dialect*/ merge into {0}  P using\r\n                            (SELECT MIN(FSEQ) AS FSEQ, FORDERID,\r\n               FOUTID,SUM(ISNULL(FBASEOUTQTY,0)) AS FBASEOUTQTY,FRETURNID,SUM(ISNULL(FBASERETURNQTY,0)) AS FBASERETURNQTY,\r\n               FRECID,SUM(ISNULL(FBASERECQTY,0)) AS FBASERECQTY FROM {0} GROUP BY FORDERID,FOUTID,FRETURNID,FRECID) UT\r\n                                        on (UT.FSEQ=P.FSEQ)\r\n                            WHEN MATCHED THEN UPDATE SET P.FBASEOUTQTY=UT.FBASEOUTQTY,P.FBASERETURNQTY=UT.FBASERETURNQTY,P.FBASERECQTY=UT.FBASERECQTY;", flowTable));
-            }
-            else
-            {
-                if (ctx.DatabaseType == DatabaseType.Oracle)
-                {
-                    stringBuilder4.AppendLine(string.Format("/*dialect*/ merge into {0}  P using\r\n                            (SELECT MIN(FSEQ) AS FSEQ, FORDERID,\r\n               FOUTID,SUM(NVL(FBASEOUTQTY,0)) AS FBASEOUTQTY,FRETURNID,SUM(NVL(FBASERETURNQTY,0)) AS FBASERETURNQTY,\r\n               FRECID,SUM(NVL(FBASERECQTY,0)) AS FBASERECQTY FROM {0} GROUP BY FORDERID,FOUTID,FRETURNID,FRECID) UT\r\n                                        on (UT.FSEQ=P.FSEQ)\r\n                            WHEN MATCHED THEN UPDATE SET P.FBASEOUTQTY=UT.FBASEOUTQTY,P.FBASERETURNQTY=UT.FBASERETURNQTY,P.FBASERECQTY=UT.FBASERECQTY", flowTable));
-                }
-            }
+
+
+            #region 合并计算数量
+
+        //计划订单和工序选定是否加入 更新，后续调整
+            stringBuilder4.AppendLine(string.Format(@"
+ merge into {0} P
+USING 
+    (SELECT MIN(FSEQ) AS FSEQ,
+         FORDERID,
+          FOUTID,
+         SUM(ISNULL(FBASEOUTQTY,0)) AS FBASEOUTQTY,
+         FMOID,
+         SUM(ISNULL(FBASEMOQTY,0)) AS FBASEMOQTY,
+          FPRDINSTOCKID,
+         SUM(ISNULL(FBASEPRDINQTY,0)) AS FBASEPRDINQTY,
+         FPURORDERID,
+         SUM(ISNULL(FBASEPURORDERQTY,0)) AS FBASEPURORDERQTY,
+         FPURINSTOCKID,
+         SUM(ISNULL(FBASEPURINSTOCKQTY,0)) AS FBASEPURINSTOCKQTY
+    FROM {0}
+    GROUP BY  FORDERID,FOUTID,FMOID,FPRDINSTOCKID,FPURORDERID,FPURINSTOCKID) UT
+    ON (UT.FSEQ=P.FSEQ)
+    WHEN MATCHED THEN
+UPDATE SET P.FBASEOUTQTY=UT.FBASEOUTQTY,
+         P.FBASEMOQTY=UT.FBASEMOQTY,
+         P.FBASEPRDINQTY=UT.FBASEPRDINQTY,
+          P.FBASEPURORDERQTY=UT.FBASEPURORDERQTY,
+         P.FBASEPURINSTOCKQTY=UT.FBASEPURINSTOCKQTY", flowTable));
+
+            #endregion
+        
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
             stringBuilder4.AppendLine(string.Format("DELETE {0} WHERE NOT EXISTS (SELECT 1 FROM   \r\n             (SELECT MIN(FSEQ) AS FSEQ FROM {0} GROUP BY FORDERID,FOUTID,FMOID,FPRDINSTOCKID,FPURORDERID,FPURINSTOCKID ) gp WHERE gp.FSEQ={0}.FSEQ)", flowTable));
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
+
+            #region 去掉重复数量
+
+        
             stringBuilder4.AppendLine(string.Format(" UPDATE {0} AS P ", flowTable));
             stringBuilder4.AppendLine(" SET FBASEORDERQTY=null");
             stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FORDERID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FORDERID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
             stringBuilder4.AppendLine(string.Format(" UPDATE {0} AS P ", flowTable));
-            stringBuilder4.AppendLine(" SET FDENOID=null,FBASEDENOQTY=null");
-            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FDENOID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FDENOID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
+            stringBuilder4.AppendLine(" SET FMOID=null,FBASEMOQTY=null");
+            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FMOID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FMOID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
             stringBuilder4.AppendLine(string.Format(" UPDATE {0} AS P ", flowTable));
@@ -712,24 +736,26 @@ namespace JHF.Sal.App.Report
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
             stringBuilder4.AppendLine(string.Format(" UPDATE {0} AS P ", flowTable));
-            stringBuilder4.AppendLine(" SET FRETNOID=null,FBASERETQTY=null");
-            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FRETNOID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FRETNOID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
+            stringBuilder4.AppendLine(" SET FPRDINSTOCKID=null,FBASEPRDINQTY=null");
+            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FPRDINSTOCKID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FPRDINSTOCKID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
             stringBuilder4.AppendLine(string.Format(" UPDATE {0} AS P ", flowTable));
-            stringBuilder4.AppendLine(" SET FRETURNID=null,FRETURNTYPE=null,FBASERETURNQTY=null");
-            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FRETURNID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FRETURNID,FRETURNTYPE) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
+            stringBuilder4.AppendLine(" SET FPURORDERID=null,FBASEPURORDERQTY=null");
+            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FPURORDERID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FPURORDERID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
             stringBuilder4.AppendLine(string.Format(" UPDATE {0} AS P ", flowTable));
-            stringBuilder4.AppendLine(" SET FRECID=null,FOPENQTY=null,FBASERECQTY=null");
-            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FRECID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FRECID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
+            stringBuilder4.AppendLine(" SET FPURINSTOCKID=null,FBASEPURINSTOCKQTY=null");
+            stringBuilder4.AppendLine(string.Format(" WHERE NOT EXISTS (SELECT 1 FROM (SELECT FPURINSTOCKID, MIN(FSEQ) FSEQ FROM {0}  GROUP BY FPURINSTOCKID) B WHERE B.FSEQ=P.FSEQ ) ", flowTable));
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
+            //删除数量为空。其它关联 也为空的数据
             stringBuilder4.AppendLine(string.Format(" DELETE {0} ", flowTable));
-            stringBuilder4.AppendLine(" WHERE FBASEORDERQTY IS NULL AND  FDENOID IS NULL AND FOUTID IS NULL AND FRETNOID IS NULL AND FRETURNID IS NULL AND FRECID IS NULL ");
+            stringBuilder4.AppendLine(" WHERE FBASEORDERQTY IS NULL AND  FMOID IS NULL AND FOUTID IS NULL AND FPRDINSTOCKID IS NULL AND FPURORDERID IS NULL AND FPURINSTOCKID IS NULL ");
             list2.Add(new SqlObject(stringBuilder4.ToString(), new List<SqlParam>()));
             stringBuilder4.Clear();
+            #endregion
             DBUtils.ExecuteBatchWithTime(ctx, list2, 300);
             using (KDTransactionScope kDTransactionScope = new KDTransactionScope(TransactionScopeOption.Suppress))
             {
