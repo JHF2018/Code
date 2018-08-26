@@ -32,27 +32,22 @@
   <ItemGroup>
     <Reference Include="Kingdee.BOS, Version=7.1.512.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Kingdee.BOS.dll</HintPath>
+      <HintPath>..\..\AppServer\Kingdee.BOS.dll</HintPath>
     </Reference>
-    <Reference Include="Kingdee.BOS.App, Version=7.1.512.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Kingdee.BOS.App.dll</HintPath>
+    <Reference Include="Kingdee.BOS.App">
+      <HintPath>..\..\AppServer\Kingdee.BOS.App.dll</HintPath>
     </Reference>
-    <Reference Include="Kingdee.BOS.Contracts, Version=7.1.512.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Kingdee.BOS.Contracts.dll</HintPath>
+    <Reference Include="Kingdee.BOS.Contracts">
+      <HintPath>..\..\AppServer\Kingdee.BOS.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Kingdee.BOS.Core, Version=7.1.512.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Kingdee.BOS.Core.dll</HintPath>
+    <Reference Include="Kingdee.BOS.Core">
+      <HintPath>..\..\AppServer\Kingdee.BOS.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Kingdee.BOS.DataEntity, Version=7.1.512.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Kingdee.BOS.DataEntity.dll</HintPath>
+    <Reference Include="Kingdee.BOS.DataEntity">
+      <HintPath>..\..\AppServer\Kingdee.BOS.DataEntity.dll</HintPath>
     </Reference>
-    <Reference Include="Kingdee.BOS.ServiceHelper, Version=7.1.512.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Kingdee.BOS.ServiceHelper.dll</HintPath>
+    <Reference Include="Kingdee.BOS.ServiceHelper">
+      <HintPath>..\..\AppServer\Kingdee.BOS.ServiceHelper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

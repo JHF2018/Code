@@ -1,5 +1,0 @@
-E:\JHF\BDY\JHF.Sal.Report\Bin\JFH.BDY.Business.Plugln.dll
-E:\JHF\BDY\JHF.Sal.Report\Bin\JFH.BDY.Business.Plugln.pdb
-E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Business.Plugln\obj\Debug\JFH.BDY.Business.Plugln.dll
-E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Business.Plugln\obj\Debug\JFH.BDY.Business.Plugln.pdb
-E:\JHF\BDY\JHF.Sal.Report\JFH.BDY.Business.Plugln\obj\Debug\JFH.BDY.Business.Plugln.csprojResolveAssemblyReference.cache
