@@ -1,0 +1,7 @@
+E:\JHF\Code\BDY\Bin\JHF.BDY.App.ServicePlugIn.dll
+E:\JHF\Code\BDY\Bin\JHF.BDY.App.ServicePlugIn.pdb
+E:\JHF\Code\BDY\JHF.BDY.App.ServicePlugIn\obj\Debug\JHF.BDY.App.ServicePlugIn.csprojResolveAssemblyReference.cache
+E:\JHF\Code\BDY\JHF.BDY.App.ServicePlugIn\obj\Debug\JHF.BDY.App.ServicePlugIn.dll
+E:\JHF\Code\BDY\JHF.BDY.App.ServicePlugIn\obj\Debug\JHF.BDY.App.ServicePlugIn.pdb
+E:\JHF\Code\AppServer\JHF.BDY.App.ServicePlugIn.dll
+E:\JHF\Code\AppServer\JHF.BDY.App.ServicePlugIn.pdb
